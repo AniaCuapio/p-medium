@@ -1,54 +1,58 @@
-
- function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-  }            
-$("#closed").click(function(){
-    $(this).closest("#cardPublisher").remove()
-})
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+$("#closed").click(function () {
+  $(this).closest("#cardPublisher").remove();
+});
 $("#horizon-prev").click(function () {
-    event.preventDefault();
-    $(".lix").animate({
-        scrollLeft: "-=800"
-    }, "slow");
+  event.preventDefault();
+  $(".lix").animate(
+    {
+      scrollLeft: "-=800",
+    },
+    "slow"
+  );
 });
 
-$(".card-title").click(event=>{
-    $("#exampleModalLong").modal('show')
-})
-
+$(".card-title").click((event) => {
+  $("#exampleModalLong").modal("show");
+});
 
 $("#horizon-next").click(function () {
-    event.preventDefault();
-    $(".lix").animate({
-        scrollLeft: "+=800"
-    }, "slow");
+  event.preventDefault();
+  $(".lix").animate(
+    {
+      scrollLeft: "+=800",
+    },
+    "slow"
+  );
 });
 //this is de infinity content
 window.addEventListener("scroll", (event) => {
-    if ($(window).scrollTop() > $(document).height() - $(window).height() - 400) {
-        loadMorePost()
+  if ($(window).scrollTop() > $(document).height() - $(window).height() - 400) {
+    loadMorePost();
+  }
+});
+const loadMorePost = () => {
+  console.log("lo que quieras");
+  $.get({
+    url: "http://localhost:3000/entries",
+    success: function (data) {
+      console.log(data.data.entries);
+      const dataArray = data.data.entries;
+      // for (let key in data) {
+      //     const postRecent = {
+      //         id: key,
+      //         ...data[key],
+      //     }
+      //     dataArray.push(postRecent)
+      // }
 
-    }
-})
-const loadMorePost = () => {    
-    console.log("lo que quieras")
-    $.get({
-        url: "https://ajaxclass-1ca34.firebaseio.com/medium-equipo1/posts/.json",
-        success: function (data) {
-            const dataArray = [];
-            for (let key in data) {
-                const postRecent = {
-                    id: key,
-                    ...data[key],
-                }
-                dataArray.push(postRecent)
-            }
-           
-            dataArray.map(post => {
-                let randomAge = getRandomInt(2000,2020)
-                let randomNumber = getRandomInt(3,10)
-                
-                $("#containeer").append(`
+      dataArray.map((post) => {
+        let randomAge = getRandomInt(2000, 2020);
+        let randomNumber = getRandomInt(3, 10);
+
+        $("#containeer").append(`
                 <div class="modal fade" id="exampleModalLong-${post.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -102,103 +106,103 @@ const loadMorePost = () => {
                         </div>
                     </div>
                 </div>
-            </div>`)
-            })
-            // se agregan tooltips y popover para el scope de la funcion.
-            $('[data-toggle="tooltip"]').tooltip()
-            $('[data-toggle="popover"]').popover({
-                container: "body",
-                trigger: "hover",
-                html: true,
-                content: function () {
-                    const author = $(this).data("author")
-                    const age = $(this).data("age")
-                    console.log(author)
-                    return `<div class="card" style="width: 18rem;">
+            </div>`);
+      });
+      // se agregan tooltips y popover para el scope de la funcion.
+      $('[data-toggle="tooltip"]').tooltip();
+      $('[data-toggle="popover"]').popover({
+        container: "body",
+        trigger: "hover",
+        html: true,
+        content: function () {
+          const author = $(this).data("author");
+          const age = $(this).data("age");
+          console.log(author);
+          return `<div class="card" style="width: 18rem;">
                     <div class="card-body">
                       <h5 class="card-title">${author}</h5>
                       <h6 class="card-subtitle mb-2 text-muted">Medium member since ${age}</h6>
                       <p class="card-text">Developer, accidental wordsmith. OneZero columnist trying to debug the why behind tech.</p>
                     </div>
-                  </div>`
-                }
-            });
-            $('[data-toggle="popoverdott"]').popover({
-                container: "body",
-                trigger: "click",
-                html: true,
-                content: function () {
-                    const menu = $(this).data("menu")
-                    console.log(menu)
-                    return `<div>
+                  </div>`;
+        },
+      });
+      $('[data-toggle="popoverdott"]').popover({
+        container: "body",
+        trigger: "click",
+        html: true,
+        content: function () {
+          const menu = $(this).data("menu");
+          console.log(menu);
+          return `<div>
                     <ul class="p-0">
                     <li id="menu" class=" mb-2">Dissmis this history</li>
                     <li id="menu" class=" mb-2">Mute this author</li>
                     <li id="menu" class=" mb-2">Mute this publication</li>
                     </ul>
-                    </div>`
-                }
-            });           
-            $('[data-toggle="popover2"]').popover({
-                container: "body",
-                trigger: "hover",
-                html: true,
-                content: function () {
-                    const category = $(this).data("category")
-                    console.log(category)
-                    return `<div class="card" style="width: 18rem;">
+                    </div>`;
+        },
+      });
+      $('[data-toggle="popover2"]').popover({
+        container: "body",
+        trigger: "hover",
+        html: true,
+        content: function () {
+          const category = $(this).data("category");
+          console.log(category);
+          return `<div class="card" style="width: 18rem;">
                     <div class="card-body">
                       <h5 class="card-title">${category}</h5>
                       <p>Higher Learning. A new Medium publication.</p>
                     </div>
-                  </div>`
-                }
-            });
+                  </div>`;
         },
-        dataType: "json",
-        cache: false
-    });
-}
+      });
+    },
+    dataType: "json",
+    cache: false,
+  });
+};
 
 //finish infinity content
 // recent cards
-let currentDate = new Date()
-let counter = 0
-let popularCounter = 0
+let currentDate = new Date();
+let counter = 0;
+let popularCounter = 0;
 
 const getPost = () => {
-    $.get(
-        "https://ajaxclass-1ca34.firebaseio.com/medium-equipo1/posts/.json",
-        function (respuesta) {
-            //devolvemos un objeto a un array para usar metodos de array 
-            const dataArray = [];
-            for (let key in respuesta) {
-                const postRecent = {
-                    id: key,
-                    ...respuesta[key],
-                }
-                dataArray.push(postRecent)
-            }
-           
-            const sortedArticle = dataArray.sort(function (a, b) {
-                const aDate = a.date
-                const bDate = b.date
+  $.get(
+    "https://ajaxclass-1ca34.firebaseio.com/medium-equipo1/posts/.json",
+    function (respuesta) {
+      //devolvemos un objeto a un array para usar metodos de array
+      const dataArray = [];
+      for (let key in respuesta) {
+        const postRecent = {
+          id: key,
+          ...respuesta[key],
+        };
+        dataArray.push(postRecent);
+      }
 
-                if (aDate > bDate) {
-                    return -1
-                } else {
-                    return 1
-                }
-            })
+      const sortedArticle = dataArray.sort(function (a, b) {
+        const aDate = a.date;
+        const bDate = b.date;
 
-         //iteramos dentro del data array e imprimimos cards.
-            sortedArticle.map(post => {
-                let randomNumber = getRandomInt(3,10)
-                let randomAge = getRandomInt(2000,2020)
-               
-                if (counter < 1) {
-                    //card principal izquierda
-                    $("#cardLeftPost").append(`<div class="card-mb-3">
+        if (aDate > bDate) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
+
+      //iteramos dentro del data array e imprimimos cards.
+      sortedArticle.map((post) => {
+        let randomNumber = getRandomInt(3, 10);
+        let randomAge = getRandomInt(2000, 2020);
+
+        if (counter < 1) {
+          //card principal izquierda
+          $("#cardLeftPost").append(`<div class="card-mb-3">
                 <div class="row no-gutters d-flex">                
                     <div class="col-mb-4">
                         <img class="imageess"
@@ -254,10 +258,10 @@ const getPost = () => {
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                       </div>
-                    </div>`)
-                } else if (counter === 4) {
-                    //card principal derecha 
-                    $("#rightCard").append(`<div class="card-mb-3">
+                    </div>`);
+        } else if (counter === 4) {
+          //card principal derecha
+          $("#rightCard").append(`<div class="card-mb-3">
                 <div class="row no-gutters">
                     <div class="col-mb-4">
                         <img class="imageess2"
@@ -308,11 +312,10 @@ const getPost = () => {
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
               </div>
-            </div>`)
-
-                } else if (counter >= 1 && counter <= 3) {
-                    //cards principal centro 
-                    $("#cardsCenter").append(`<div id="second-card" class="card mb-3">
+            </div>`);
+        } else if (counter >= 1 && counter <= 3) {
+          //cards principal centro
+          $("#cardsCenter").append(`<div id="second-card" class="card mb-3">
                 <div class="row no-gutters d-flex align-items-center  flex-row-reverse flex-md-row">
                     <div class="col-4">
                         <img width="100%"
@@ -365,31 +368,47 @@ const getPost = () => {
                 </div>
               </div>
             </div>     
-            `)
-                }
-            //se agrega condicional para los mas populares con un nuevo contador interno.
-                if (popularCounter < 4 && post.category === "Coronavirus") {
-                    $("#popularPost").append(`<li class="mb-5">
+            `);
+        }
+        //se agrega condicional para los mas populares con un nuevo contador interno.
+        if (popularCounter < 4 && post.category === "Coronavirus") {
+          $("#popularPost").append(`<li class="mb-5">
                 <div class="col-3 col-md-4 p-0">
-                    <h2 class="text-muted text-right">0${popularCounter + 1}</h2>
+                    <h2 class="text-muted text-right">0${
+                      popularCounter + 1
+                    }</h2>
                 </div>
                 <div class="col-9 col-md-8">
-                    <h6 class="textA" data-toggle="modal" data-target="#exampleModalLong-${post.id}">${post.title}</h6>
+                    <h6 class="textA" data-toggle="modal" data-target="#exampleModalLong-${
+                      post.id
+                    }">${post.title}</h6>
                     <div>
-                    <span><a class="text-dark user" href="#"data-toggle="popover" data-placement="top" data-author="${post.author}" data-age="${randomAge}">${post.author}</a>
-                    </span> In <span><a class="text-dark user" href="#"data-toggle="popover2" data-placement="top" data-category="${post.category}">${post.category}</a></span>
-                    <br><time class=" text-muted user" data-toggle="tooltip" data-placement="top" title="Updated ${post.date}">${post.date}</time><span class="text-muted user"data-toggle="tooltip" data-placement="bottom" title="${randomNumber} min read"> <img width="6px"
+                    <span><a class="text-dark user" href="#"data-toggle="popover" data-placement="top" data-author="${
+                      post.author
+                    }" data-age="${randomAge}">${post.author}</a>
+                    </span> In <span><a class="text-dark user" href="#"data-toggle="popover2" data-placement="top" data-category="${
+                      post.category
+                    }">${post.category}</a></span>
+                    <br><time class=" text-muted user" data-toggle="tooltip" data-placement="top" title="Updated ${
+                      post.date
+                    }">${
+            post.date
+          }</time><span class="text-muted user"data-toggle="tooltip" data-placement="bottom" title="${randomNumber} min read"> <img width="6px"
                                             src="images/primitive-dot (2).svg" alt=""> ${randomNumber} min
                                         read </span><span> <img width="8px" src="images/star (3).svg" alt="">
                                     </span>
                     </div>
                 </div>
             </li>
-            <div class="modal fade" id="exampleModalLong-${post.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal fade" id="exampleModalLong-${
+              post.id
+            }" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title font-weight-bold" id="exampleModalLongTitle">${post.title}</h5>
+                        <h5 class="modal-title font-weight-bold" id="exampleModalLongTitle">${
+                          post.title
+                        }</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -409,67 +428,65 @@ const getPost = () => {
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                       </div>
                     </div>
-                  </div>`)
-                    popularCounter++
-                }
-                counter++
-            })
-            let randomAge = getRandomInt(2000,2020)//se agregan tooltips y popover dentro del scope para el alcance detntro de la funcion.
-            $('[data-toggle="tooltip"]').tooltip()
-            $('[data-toggle="popover"]').popover({
-                container: "body",
-                trigger: "hover",
-                html: true,
-                content: function () {
-                    const author = $(this).data("author")
-                    const age = $(this).data("age")
-                    console.log(author)
-                    return `<div class="card">
+                  </div>`);
+          popularCounter++;
+        }
+        counter++;
+      });
+      let randomAge = getRandomInt(2000, 2020); //se agregan tooltips y popover dentro del scope para el alcance detntro de la funcion.
+      $('[data-toggle="tooltip"]').tooltip();
+      $('[data-toggle="popover"]').popover({
+        container: "body",
+        trigger: "hover",
+        html: true,
+        content: function () {
+          const author = $(this).data("author");
+          const age = $(this).data("age");
+          console.log(author);
+          return `<div class="card">
                 <div id="cardPopover" class="card-body">
                   <h2 class="card-title">${author}</h2>
                   <hr>
                   <h6 class="card-subtitle mb-2 text-muted">Medium member since ${age}</h6>
                   <p class="card-text">Developer, accidental wordsmith. OneZero columnist trying to debug the why behind tech.</p>
                 </div>
-              </div>`
-                }
-            });
-           
-            $('[data-toggle="popoverdott"]').popover({
-                container: "body",
-                trigger: "click",
-                html: true,
-                content: function () {
-                    const menu = $(this).data("menu")
-                    console.log(menu)
-                    return `<div class="d-flex align-content-center">
+              </div>`;
+        },
+      });
+
+      $('[data-toggle="popoverdott"]').popover({
+        container: "body",
+        trigger: "click",
+        html: true,
+        content: function () {
+          const menu = $(this).data("menu");
+          console.log(menu);
+          return `<div class="d-flex align-content-center">
                     <ul class="p-0">
                     <li id="menu" class=" mb-2">Dissmis this history</li>
                     <li id="menu" class=" mb-2">Mute this author</li>
                     <li id="menu" class=" mb-2">Mute this publication</li>
                     </ul>
-                    </div>`
-                }
-            });
+                    </div>`;
+        },
+      });
 
-            $('[data-toggle="popover2"]').popover({
-                container: "body",
-                trigger: "hover",
-                html: true,
-                content: function () {
-                    const category = $(this).data("category")
-                    console.log(category)
-                    return `<div class="card" style="width: 18rem;">
+      $('[data-toggle="popover2"]').popover({
+        container: "body",
+        trigger: "hover",
+        html: true,
+        content: function () {
+          const category = $(this).data("category");
+          console.log(category);
+          return `<div class="card" style="width: 18rem;">
                 <div class="card-body">
                   <h5 class="card-title">${category}</h5>
                   <p>Higher Learning. A new Medium publication.</p>
                 </div>
-              </div>`
-                }
-            });
-            
-        })
-}
+              </div>`;
+        },
+      });
+    }
+  );
+};
 $(window).on("load", getPost);
-
-
